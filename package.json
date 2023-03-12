@@ -1,0 +1,183 @@
+{
+  "name": "aicodehelper",
+  "displayName": "AICodeHelper",
+  "description": "AI-based coding assistant",
+  "version": "0.0.34",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "publisher": "Kimseungtae",
+  "categories": [
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kstost/aicodehelper.git"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "icon": "images/icon.png",
+  "contributes": {
+    "media": {
+      "encoder.json": "assets/encoder.json",
+      "vocab.bpe": "assets/vocab.bpe"
+    },
+    "configuration": {
+      "type": "object",
+      "title": "AICodeHelper Configuration",
+      "properties": {
+        "aicodehelper.codereviewprompt": {
+          "type": "string",
+          "default": "{{selectedcode}}{{newline}}review this code.{{newline}}explain the good part and the bad part.{{newline}}don't include the original code in your comment response.{{newline}}Your comment must be written in annotation format of the programming language.{{newline}}express in {{language}}",
+          "description": "This is the prompt template used for a code review\n코드리뷰를 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+C)"
+        },
+        "aicodehelper.refactoringprompt": {
+          "type": "string",
+          "default": "{{selectedcode}}{{newline}}{{newline}}Refactor the code simple and reusable and readable without modification of algorithm logic.{{newline}}No explanation. Show only the refactored code without explanations, annotations, comments, descriptions",
+          "description": "This is the prompt template used for code refactoring\n코드리팩토링을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+R)"
+        },
+        "aicodehelper.commmentingprompt": {
+          "type": "string",
+          "default": "{{selectedcode}}{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code.",
+          "description": "This is the prompt template used for adding code comments\n코드주석달기기능을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+Z)"
+        },
+        "aicodehelper.generatingprompt": {
+          "type": "string",
+          "default": "{description}={{selectedcode}}{{newline}}{{newline}}Make the code as {description} in {{languageId}} syntax. Please comment line by line in the code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code.",
+          "description": "This is a prompt template for generating code based on a description of what you want to create in code\n코드로 만들고싶은것에 대한 묘사를 기반으로 하여 코드를 생성해내는 기능을 위한 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+G)"
+        },
+        "aicodehelper.APIKey": {
+          "type": "boolean",
+          "default": false,
+          "description": "Please enter your API Key into the input box that appears by pressing the shortcut key (Ctrl+Alt+Shift+Q)\n단축키(Ctrl+Alt+Shift+Q)를 눌러서 나오는 입력박스에 API Key를 입력해주세요"
+        },
+        "aicodehelper.gptkey": {
+          "type": "string",
+          "default": "",
+          "description": "No need to be set up. If you want to set your API key, please enter it into the input box that appears by pressing the shortcut key (Ctrl+Alt+Shift+Q).\n이 값은 설정할 필요 없습니다. APIKey를 설정하기 원한다면 단축키(Ctrl+Alt+Shift+Q)를 눌러서 나오는 입력박스에 API Key를 입력해주세요."
+        },
+        "aicodehelper.language": {
+          "type": "string",
+          "default": "english",
+          "description": "What language would you like AI to use? (ex: english, korean, vietnamese)\nThis value replaces {{language}} in the prompt template. Therefore, it will not be applied when using the Asking AI feature (Ctrl+Alt+Shift+M, Ctrl+Alt+Shift+,) where a prompt template setting does not exist."
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "aicodehelper.registAPIKey",
+        "key": "ctrl+alt+shift+q",
+        "mac": "ctrl+alt+shift+q",
+        "when": "true"
+      },
+      {
+        "command": "aicodehelper.resetEverything",
+        "key": "ctrl+alt+shift+escape",
+        "mac": "ctrl+alt+shift+escape",
+        "when": "true"
+      },
+      {
+        "command": "aicodehelper.resetPromptHistory",
+        "key": "ctrl+alt+shift+`",
+        "mac": "ctrl+alt+shift+`",
+        "when": "true"
+      },
+      {
+        "command": "aicodehelper.justAsking",
+        "key": "ctrl+alt+shift+m",
+        "mac": "ctrl+alt+shift+m",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.recentHistoryOfAsking",
+        "key": "ctrl+alt+shift+.",
+        "mac": "ctrl+alt+shift+.",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.justInputAsking",
+        "key": "ctrl+alt+shift+,",
+        "mac": "ctrl+alt+shift+,",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.generateCode",
+        "key": "ctrl+alt+shift+g",
+        "mac": "ctrl+alt+shift+g",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.addComment",
+        "key": "ctrl+alt+shift+z",
+        "mac": "ctrl+alt+shift+z",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.refactoring",
+        "key": "ctrl+alt+shift+r",
+        "mac": "ctrl+alt+shift+r",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.codereview",
+        "key": "ctrl+alt+shift+c",
+        "mac": "ctrl+alt+shift+c",
+        "when": "editorHasSelection || editorTextFocus"
+      }
+    ],
+    "commands": [
+      {
+        "command": "aicodehelper.justAsking",
+        "title": "Asking AI"
+      },
+      {
+        "command": "aicodehelper.justInputAsking",
+        "title": "Asking AI with Input"
+      },
+      {
+        "command": "aicodehelper.recentHistoryOfAsking",
+        "title": "List of recent history of asking"
+      },
+      {
+        "command": "aicodehelper.generateCode",
+        "title": "Generate code"
+      },
+      {
+        "command": "aicodehelper.addComment",
+        "title": "Adding comment to code"
+      },
+      {
+        "command": "aicodehelper.refactoring",
+        "title": "Refactoring code"
+      },
+      {
+        "command": "aicodehelper.codereview",
+        "title": "Code review"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.60.0",
+    "@vscode/test-electron": "^2.2.3",
+    "eslint": "^8.34.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "keytar": "^7.9.0",
+    "node-fetch": "^2.6.9"
+  }
+}

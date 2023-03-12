@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.34",
+  "version": "0.0.36",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -130,6 +130,10 @@
       }
     ],
     "commands": [
+      {
+        "command": "aicodehelper.registAPIKey",
+        "title": "Setup API key"
+      },
       {
         "command": "aicodehelper.justAsking",
         "title": "Asking AI"

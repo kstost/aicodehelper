@@ -257,6 +257,37 @@ AI Code Helper is a tool that automatically performs tasks such as adding commen
          </tr>
       </table>
       ```
+7. **Naming variables, functions, etc**  
+   It is a function that solves the problem of naming, which is the most difficult part of coding.  
+   <img src="https://blog.kakaocdn.net/dn/djHq9D/btr34BChNMB/nrs95N0A0PjkvKBCzB83PK/img.gif" width="100%" />  
+   Select the code you want to rename in the code editor and press `Ctrl+Shift+Alt+N`.  
+   If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
+
+   *Select the code that looks like the one shown below and press the shortcut.*
+      ```javascript
+      let a = 6;
+      let b = [5, 3, 7, 6, 8, 9];
+      let c = false;
+      for (let i = 0; i < b.length; i++) {
+         if (a == b[i]) {
+            c = true;
+         }
+      }
+      console.log(c);
+      ```
+
+   *This will be converted like*  
+      ```javascript
+      let searchValue = 6;
+      let arrayToSearch = [5, 3, 7, 6, 8, 9];
+      let isValueFound = false;
+      for (let i = 0; i < arrayToSearch.length; i++) {
+         if (searchValue == arrayToSearch[i]) {
+            isValueFound = true;
+         }
+      }
+      console.log(isValueFound);
+      ```
 ---
 ## License
 

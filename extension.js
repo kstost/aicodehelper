@@ -262,8 +262,15 @@ async function activate(context) {
 			editor.edit(editBuilder => {
 				let res = parseData(response, text)
 				if (res.code) {
+					res.code = res.code.split('\n').map(line => {
+						line = line.trim();
+						if (line.startsWith('//')) line = line.slice(2)
+						if (line.startsWith('#')) line = line.slice(1)
+						return `|${line}`;
+					}).join('\n');
 					insertNewLineOnTopOfCursor(`${res.code}`, seld);
 					editor.selection = new vscode.Selection(seld, seld.translate(res.code.split('\n').length, 0));
+					vscode.commands.executeCommand('editor.action.commentLine');
 					showTokenUsage(response);
 				} else {
 					showError({ msg: `${res.error}`, context });

@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.39",
+  "version": "0.0.42",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -37,7 +37,7 @@
         },
         "aicodehelper.codereviewprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}review this code.{{newline}}explain the good part and the bad part.{{newline}}don't include the original code in your comment response.{{newline}}Your comment must be written in annotation format of the programming language.{{newline}}express in {{language}}",
+          "default": "{{selectedcode}}{{newline}}review this code.{{newline}}explain the good part and the bad part in {{language}}.{{newline}}don't include the original code in your explanation.",
           "description": "This is the prompt template used for a code review\n코드리뷰를 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+C)"
         },
         "aicodehelper.refactoringprompt": {

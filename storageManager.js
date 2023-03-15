@@ -10,6 +10,8 @@ async function removeAllPassword() {
 function removeAllConfigs() {
     const config = vscode.workspace.getConfiguration('aicodehelper');
     let keys = [
+        'temperature',
+        'namingprompt',
         'codereviewprompt',
         'refactoringprompt',
         'commmentingprompt',

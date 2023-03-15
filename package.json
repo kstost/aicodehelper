@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.36",
+  "version": "0.0.38",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -30,6 +30,11 @@
       "type": "object",
       "title": "AICodeHelper Configuration",
       "properties": {
+        "aicodehelper.namingprompt": {
+          "type": "string",
+          "default": "{{selectedcode}}{{newline}}suggest good variable names for the code and show replaced code with suggested names.{{newline}}No any other explanations, annotations, comments, descriptions in your response.{{newline}}reponse only code.",
+          "description": "This is the prompt template used for naming variables\n변수이름 작명을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+N)"
+        },
         "aicodehelper.codereviewprompt": {
           "type": "string",
           "default": "{{selectedcode}}{{newline}}review this code.{{newline}}explain the good part and the bad part.{{newline}}don't include the original code in your comment response.{{newline}}Your comment must be written in annotation format of the programming language.{{newline}}express in {{language}}",
@@ -64,6 +69,11 @@
           "type": "string",
           "default": "english",
           "description": "What language would you like AI to use? (ex: english, korean, vietnamese)\nThis value replaces {{language}} in the prompt template. Therefore, it will not be applied when using the Asking AI feature (Ctrl+Alt+Shift+M, Ctrl+Alt+Shift+,) where a prompt template setting does not exist."
+        },
+        "aicodehelper.temperature": {
+          "type": "string",
+          "default": "0.8",
+          "description": "Temperature 0~1 in float\nTemperature value will be applied when using the those features (Ctrl+Alt+Shift+M Ctrl+Alt+Shift+, Ctrl+Alt+Shift+.) where a prompt template setting does not exist."
         }
       }
     },
@@ -127,6 +137,12 @@
         "key": "ctrl+alt+shift+c",
         "mac": "ctrl+alt+shift+c",
         "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.naming",
+        "key": "ctrl+alt+shift+n",
+        "mac": "ctrl+alt+shift+n",
+        "when": "editorHasSelection || editorTextFocus"
       }
     ],
     "commands": [
@@ -161,6 +177,10 @@
       {
         "command": "aicodehelper.codereview",
         "title": "Code review"
+      },
+      {
+        "command": "aicodehelper.naming",
+        "title": "Naming Variables"
       }
     ]
   },

@@ -14,6 +14,13 @@ function makeid(length) {
 	}
 	return result;
 }
+function getTemperature() {
+	const defaultValue = 0.8
+	let value = defaultValue;
+	try { value = Number(getConfigValue('temperature')) } catch { }
+	if (isNaN(value)) value = defaultValue;
+	return value;
+}
 async function inputAPIKeyDialog() {
 	let res = await vscode.window.showInputBox({
 		title: "Setting Up an API Key",
@@ -64,6 +71,22 @@ function parseData(response, text) {
 			dcode[0] = ''
 			dcode[dcode.length - 1] = '';
 			code = dcode.join('\n').trim();
+		} else {
+			const cnds = [
+				code.split('```').length === 3,
+				code.split('\n').filter(line => line.startsWith('```')).length === 2
+			]
+			const conditions = cnds.filter(Boolean).length === cnds.length
+			if (conditions) {
+				const splc = code.split('\n');
+				let accus = [];
+				let add = false
+				for (let line of splc) {
+					if (line.startsWith('```')) { add = !add; continue; }
+					if (add) accus.push(line);
+				}
+				code = accus.join('\n').trim();
+			}
 		}
 		let endcode = text.endsWith('\n') ? '\n' : ''
 		let res = {};
@@ -201,7 +224,7 @@ async function activate(context) {
 		const chatGPT = new ChatGPT({ apiKey: await getGPTAPIKey(context), encoder, bpe_file, promptTokenLimit: 2048, vscode });
 		return await vscode.window.withProgress({
 			title, cancellable: false, location: vscode.ProgressLocation.Notification,
-		}, async (progress) => await chatGPT.completion(prompt, { temperature: system ? 0 : 0.8 }));
+		}, async (progress) => await chatGPT.completion(prompt, { temperature: system ? 0 : getTemperature() }));
 	};
 	const affectResult = (editor, text, selection, response) => {
 		editor.edit(editBuilder => {
@@ -246,6 +269,26 @@ async function activate(context) {
 					showError({ msg: `${res.error}`, context });
 				}
 			});
+		} catch { }
+		releaseToggle();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.naming', async function () {
+		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
+		processStateToggle = true;
+		if (!isSelected()) selectTheLineCursorIsOn();
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) { releaseToggle(); return; }
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		if (!text || !text.trim()) { releaseToggle(); return; }
+		try {
+			const activeEditor = vscode.window.activeTextEditor;
+			const languageId = activeEditor.document.languageId;
+			const content = bindingTemplate(getConfigValue('namingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
+			const system = `You are a coding expert assistant`;
+			console.log(system)
+			const response = await requestingToAPI({ title: 'Naming from GPT AI....', content, system })
+			affectResult(editor, text, selection, response)
 		} catch { }
 		releaseToggle();
 	}));

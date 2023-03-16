@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -47,7 +47,7 @@
         },
         "aicodehelper.commmentingprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code.",
+          "default": "{{selectedcode}}{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code. Show the original source code as it is.",
           "description": "This is the prompt template used for adding code comments\n코드주석달기기능을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+Z)"
         },
         "aicodehelper.generatingprompt": {

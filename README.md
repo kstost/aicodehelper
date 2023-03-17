@@ -2,6 +2,10 @@
 
 This extension utilizes GPT artificial intelligence to add comments to code, perform code reviews, and even refactor and generate code.  
 
+[![Youtube Badge](https://img.shields.io/badge/Youtube-ff0000?style=flat-square&logo=youtube&link=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DSQPLPPb_LuE)](https://www.youtube.com/watch?v=SQPLPPb_LuE)
+[![Gmail Badge](https://img.shields.io/badge/Gmail-d14836?style=flat-square&logo=Gmail&logoColor=white&link=mailto:monogatree@gmail.com)](mailto:monogatree@gmail.com)
+[![VSCode Badge](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=flat-square&logo=visual%20studio%20code&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=Kimseungtae.aicodehelper)
+
 <img src="https://blog.kakaocdn.net/dn/050HO/btr2OStdFHu/dqokZRPisKgwkqReTjmjdk/img.gif" width="100%" />
 
 ---

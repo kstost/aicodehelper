@@ -266,7 +266,7 @@ class ChatGPT {
                 messages,
                 temperature: 0.7,
                 stream: !!stream,
-                max_tokens: tokenLimit - sumsize,
+                // max_tokens: tokenLimit - sumsize,
                 n: 1,
                 ...payload
             };

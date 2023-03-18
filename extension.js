@@ -124,10 +124,10 @@ function getConfigValue(keyname) {
 	} catch { }
 	return value;
 }
-function setConfigValue(keyname, value) {
+async function setConfigValue(keyname, value) {
 	try {
 		const config = vscode.workspace.getConfiguration('aicodehelper');
-		config.update(keyname, value, vscode.ConfigurationTarget.Global);
+		await config.update(keyname, value, vscode.ConfigurationTarget.Global);
 	} catch { }
 }
 function bindingTemplate(template, data) {
@@ -146,8 +146,8 @@ async function secureStore(context, inputkey) {
 	await setKeyFromVSCodeSecure(context, keytars)
 	await setKeyFromVSCodeSecure(context, inputkey)
 	await removeAllPassword();
-	setConfigValue('gptkey', '')
-	setConfigValue('gptkey', undefined)
+	await setConfigValue('gptkey', '')
+	await setConfigValue('gptkey', undefined)
 }
 async function setKeyFromVSCodeSecure(context, value) {
 	if (!value || value === MASKING || value.startsWith('encrypted-')) return;

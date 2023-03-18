@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -42,7 +42,7 @@
         },
         "aicodehelper.refactoringprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}{{newline}}Refactor the code short.{{newline}}No explanations, annotations, comments, descriptions",
+          "default": "{{selectedcode}}{{newline}}{{newline}}Refactor the code short without changing algorithm.{{newline}}No explanations, annotations, comments, descriptions",
           "description": "This is the prompt template used for code refactoring\n코드리팩토링을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+R)"
         },
         "aicodehelper.commmentingprompt": {

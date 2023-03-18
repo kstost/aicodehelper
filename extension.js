@@ -122,6 +122,7 @@ function getConfigValue(keyname) {
 	try {
 		value = config.get(keyname);
 	} catch { }
+	if (keyname === 'gptkey' && value === MASKING) value = '';
 	return value;
 }
 async function setConfigValue(keyname, value) {
@@ -146,8 +147,7 @@ async function secureStore(context, inputkey) {
 	await setKeyFromVSCodeSecure(context, keytars)
 	await setKeyFromVSCodeSecure(context, inputkey)
 	await removeAllPassword();
-	await setConfigValue('gptkey', '')
-	await setConfigValue('gptkey', undefined)
+	if (setting || keytars || inputkey) await setConfigValue('gptkey', MASKING);
 }
 async function setKeyFromVSCodeSecure(context, value) {
 	if (!value || value === MASKING || value.startsWith('encrypted-')) return;
@@ -213,6 +213,10 @@ async function getGPTAPIKey(context) {
 	await secureStore(context);
 	return await getKeyFromVSCodeSecure(context);
 }
+async function formatSelection() {
+	await new Promise(r => setTimeout(r, 0));
+	await vscode.commands.executeCommand('editor.action.formatSelection');
+}
 async function activate(context) {
 	await secureStore(context);
 	const encoder = JSON.parse(await readResource('assets/encoder.json', context));
@@ -232,6 +236,7 @@ async function activate(context) {
 			if (res.code) {
 				editBuilder.replace(selection, res.code);
 				editor.selection = selection;
+				(async () => await formatSelection())();
 				showTokenUsage(response);
 			} else {
 				showError({ msg: `${res.error}`, context });
@@ -269,7 +274,10 @@ async function activate(context) {
 					}).join('\n');
 					insertNewLineOnTopOfCursor(`${res.code}`, seld);
 					editor.selection = new vscode.Selection(seld, seld.translate(res.code.split('\n').length, 0));
-					vscode.commands.executeCommand('editor.action.commentLine');
+					(async () => {
+						await vscode.commands.executeCommand('editor.action.commentLine');
+						await formatSelection();
+					})();
 					showTokenUsage(response);
 				} else {
 					showError({ msg: `${res.error}`, context });

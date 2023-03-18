@@ -257,7 +257,6 @@ async function activate(context) {
 			const languageId = activeEditor.document.languageId;
 			const content = bindingTemplate(getConfigValue('codereviewprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
-			console.log(system)
 			const response = await requestingToAPI({ title: 'Requesting code review from GPT AI....', content, system })
 			editor.edit(editBuilder => {
 				let res = parseData(response, text)
@@ -293,7 +292,6 @@ async function activate(context) {
 			const languageId = activeEditor.document.languageId;
 			const content = bindingTemplate(getConfigValue('namingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a coding expert assistant`;
-			console.log(system)
 			const response = await requestingToAPI({ title: 'Naming from GPT AI....', content, system })
 			affectResult(editor, text, selection, response)
 		} catch { }
@@ -313,7 +311,6 @@ async function activate(context) {
 			const languageId = activeEditor.document.languageId;
 			const content = bindingTemplate(getConfigValue('refactoringprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
-			console.log(system)
 			const response = await requestingToAPI({ title: 'Requesting a refactoring from GPT AI....', content, system })
 			affectResult(editor, text, selection, response)
 		} catch { }
@@ -333,7 +330,6 @@ async function activate(context) {
 			const languageId = activeEditor.document.languageId;
 			const content = bindingTemplate(getConfigValue('commmentingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
-			console.log(system)
 			const response = await requestingToAPI({ title: 'Requesting annotations from GPT AI....', content, system })
 			affectResult(editor, text, selection, response)
 		} catch { }
@@ -353,7 +349,6 @@ async function activate(context) {
 			const languageId = activeEditor.document.languageId;
 			const content = bindingTemplate(getConfigValue('generatingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
-			console.log(system)
 			const response = await requestingToAPI({ title: 'Generating code from GPT AI....', content, system })
 			affectResult(editor, text, selection, response)
 		} catch { }
@@ -471,8 +466,6 @@ async function activate(context) {
 		1 && (async () => await secureStore(context))();
 		0 && vscode.window.showInformationMessage(`Configuration of AICodeHelper has been changed`);
 	});
-	// console.log(setConfigValue('language1', '1234'));
-	// console.log(getConfigValue('language1'));
 }
 function deactivate() { }
 module.exports = {

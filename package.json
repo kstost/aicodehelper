@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.54",
+  "version": "0.0.63",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -30,6 +30,11 @@
       "type": "object",
       "title": "AICodeHelper Configuration",
       "properties": {
+        "aicodehelper.debugprompt": {
+          "type": "string",
+          "default": "{{selectedcode}}{{newline}}Debug the code.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the debugged code.",
+          "description": "This is the prompt template used for debugging\n코드의 오류 수정을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+D)"
+        },
         "aicodehelper.namingprompt": {
           "type": "string",
           "default": "{{selectedcode}}{{newline}}suggest good variable names for the code and replace them in code to suggested names.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the replaced code.",
@@ -59,6 +64,11 @@
           "type": "boolean",
           "default": false,
           "description": "Please enter your API Key into the input box that appears by pressing the shortcut key (Ctrl+Alt+Shift+Q)\n단축키(Ctrl+Alt+Shift+Q)를 눌러서 나오는 입력박스에 API Key를 입력해주세요"
+        },
+        "aicodehelper.codeDiff": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use a function that allows you to check the content suggested by AI against the original code before applying it.\nAI에 의해 제안된 내용을 적용하기 전에 원래 코드와의 비교 확인 후 적용하도록 하는 기능을 사용합니다"
         },
         "aicodehelper.gptkey": {
           "type": "string",
@@ -143,6 +153,12 @@
         "key": "ctrl+alt+shift+n",
         "mac": "ctrl+alt+shift+n",
         "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.debugging",
+        "key": "ctrl+alt+shift+d",
+        "mac": "ctrl+alt+shift+d",
+        "when": "editorHasSelection || editorTextFocus"
       }
     ],
     "commands": [
@@ -181,6 +197,10 @@
       {
         "command": "aicodehelper.naming",
         "title": "Naming Variables"
+      },
+      {
+        "command": "aicodehelper.debugging",
+        "title": "Debugging"
       }
     ]
   },

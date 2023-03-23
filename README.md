@@ -26,6 +26,7 @@ This extension is powered by Chat Completion(model: gpt-3.5-turbo) API of OpenAI
 This extension contributes the following settings:
 * `aicodehelper.language`: What language would you like AI to use? (ex: english, korean, chinese)
 * `aicodehelper.namingprompt`: Prompt template to request naming variables from OpenAI
+* `aicodehelper.debugprompt`: Prompt template to request debugging from OpenAI
 * `aicodehelper.codereviewprompt`: Prompt template to request a code review from OpenAI
 * `aicodehelper.refactoringprompt`: Prompt template to request a refactoring from OpenAI
 * `aicodehelper.commmentingprompt`: Prompt template to request adding comments from OpenAI

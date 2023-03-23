@@ -11,6 +11,7 @@ function removeAllConfigs() {
     const config = vscode.workspace.getConfiguration('aicodehelper');
     let keys = [
         'temperature',
+        'debugprompt',
         'namingprompt',
         'codereviewprompt',
         'refactoringprompt',

@@ -240,7 +240,7 @@ class ChatGPT {
         };
     }
     sumTokenSize(obj) { return obj.reduce((sum, { token }) => sum + (token || 0), 0); }
-    async completion(prompt, payload = {}) {
+    async completion(prompt, payload = {}, signal) {
         let worktime = new Date();
         prompt = this.measureAndSetPrompt(prompt);
         prompt = this.cutFrontPrompt(prompt);
@@ -308,7 +308,7 @@ class ChatGPT {
             }
             else {
                 if (!data.stream) {
-                    const fetchoption = { method: 'POST', body: JSON.stringify(data), headers: this.header(), };
+                    const fetchoption = { method: 'POST', body: JSON.stringify(data), headers: this.header(), signal };
                     let ress = await fetch(ENDPOINT, fetchoption);
                     ress = await ress.json()
                     if (ress.error) {
@@ -326,7 +326,7 @@ class ChatGPT {
                         resolver(message)
                     }
                 } else {
-                    const fetchoption = { method: 'POST', body: JSON.stringify(data), headers: this.header(), };
+                    const fetchoption = { method: 'POST', body: JSON.stringify(data), headers: this.header(), signal };
                     await fetch(ENDPOINT, fetchoption).then(response => {
                         let tokens = 0;
                         const reader = response.body.getReader();

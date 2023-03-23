@@ -3,6 +3,84 @@ const keytar = require('keytar');
 const ChatGPT = require('./ChatGPT');
 const { removeAllPassword, resetAll, resetPromptsHistory } = require('./storageManager');
 const MASKING = '****';
+async function setCurrentEditorContent(newContent) {
+	const editor = vscode.window.activeTextEditor;
+	const firstLine = editor.document.lineAt(0);
+	const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
+	const fullRange = new vscode.Range(firstLine.range.start, lastLine.range.end);
+	await editor.edit(editBuilder => {
+		editBuilder.replace(fullRange, newContent);
+	});
+}
+
+async function showDiff(originalCode) {
+	if (!getConfigValue('codeDiff')) return;
+	await new Promise(r => setTimeout(r, 0));
+	const editor = vscode.window.activeTextEditor;
+	const leftContent = editor.document.getText();
+	await setCurrentEditorContent(originalCode)
+	if (leftContent === originalCode) {
+		vscode.window.showInformationMessage('No change.');
+		return;
+	}
+	const startTime = new Date()
+	while (true) {
+		if (leftContent !== editor.document.getText()) break;
+		if (new Date() - startTime > 500) break;
+		await new Promise(r => setTimeout(r, 32));
+	}
+	const rightUri = editor.document.uri;
+	const title = '🤖 Change Review 😀';
+	const leftUri = vscode.Uri.parse('aicodehelperdiff:leftContent');
+	class LeftContentProvider { provideTextDocumentContent(uri) { return leftContent; } }
+	const leftContentProvider = new LeftContentProvider();
+	const leftContentScheme = 'aicodehelperdiff';
+	await vscode.workspace.registerTextDocumentContentProvider(leftContentScheme, leftContentProvider);
+	const diffResult = await vscode.commands.executeCommand('vscode.diff', leftUri, rightUri, title, { preview: !true });
+	//---
+	if (false) {
+		const contentTextEditor = diffResult.contentTextEditor;
+		contentTextEditor.setDecorations(
+			vscode.window.createTextEditorDecorationType({
+				backgroundColor: new vscode.ThemeColor('editor.selectionBackground'),
+				isWholeLine: true
+			}),
+			// getChangedLineRanges(contentTextEditor.document)
+		);
+		contentTextEditor.setDecorations(
+			vscode.window.createTextEditorDecorationType({
+				backgroundColor: new vscode.ThemeColor('editor.findMatchBackground'),
+				isWholeLine: true
+			}),
+			// getAddedLineRanges(contentTextEditor.document)
+		);
+	}
+}
+async function applyChangesToOriginalDocument() {
+	/*
+	"menus": {
+	  "editor/title": [
+		{
+		  "command": "extension.applyChanges",
+		  "when": "true",
+		  "group": "navigation"
+		}
+	  ]
+	},
+	  {
+		"command": "extension.applyChanges",
+		"title": "Apply Changes"
+	  },
+	*/
+
+	const editor = vscode.window.activeTextEditor;
+	const selectedText = editor.document.getText(editor.selection);
+	const updatedContent = "Updated Content";
+	await editor.edit(editBuilder => {
+		editBuilder.replace(editor.selection, updatedContent);
+	});
+}
+
 function makeid(length) {
 	let result = '';
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -221,27 +299,95 @@ async function activate(context) {
 	await secureStore(context);
 	const encoder = JSON.parse(await readResource('assets/encoder.json', context));
 	const bpe_file = await readResource('assets/vocab.bpe', context);
+	let tabChangeNo = Math.random();
+	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor((editor) => {
+		tabChangeNo = Math.random();
+		return;
+		if (editor) {
+			console.log(`Switched to ${editor.document.fileName}`);
+		} else {
+			console.log('No active editor');
+		}
+	}));
 	const requestingToAPI = async ({ title, content, system }) => {
 		let prompt = [];
 		system && prompt.push({ role: 'system', content: system });
 		prompt.push({ role: 'user', content: content });
 		const chatGPT = new ChatGPT({ apiKey: await getGPTAPIKey(context), encoder, bpe_file, promptTokenLimit: 2048, vscode });
-		return await vscode.window.withProgress({
-			title, cancellable: false, location: vscode.ProgressLocation.Notification,
-		}, async (progress) => await chatGPT.completion(prompt, { temperature: system ? 0 : getTemperature() }));
+		const cancellationTokenSource = new vscode.CancellationTokenSource();
+		const controller = new AbortController();
+		const signal = controller.signal;
+
+		//--------
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const codeBefore = editor.document.getText();
+		const tabChangeNoBefore = tabChangeNo;
+		let abortion = false;
+		let mode = 0;
+		let loop = true;
+		(async () => {
+			while (true) {
+				if (codeBefore !== editor.document.getText()) { mode = 303; abortion = true; }
+				if (selectedText !== editor.document.getText(editor.selection)) { mode = 301; abortion = true; }
+				if (tabChangeNoBefore !== tabChangeNo) { mode = 302; abortion = true; }
+				if (abortion || !loop) break;
+				await new Promise(resolve => setTimeout(resolve, 32));
+			}
+			if (abortion) {
+				cancellationTokenSource.cancel();
+				controller.abort();
+			}
+		})();
+
+		let result = await vscode.window.withProgress({
+			title, cancellable: true, location: vscode.ProgressLocation.Notification,
+		}, async (progress, cancellationToken) => {
+			cancellationToken.onCancellationRequested(() => {
+				cancellationTokenSource.cancel()
+				controller.abort();
+			});
+			try { return await chatGPT.completion(prompt, { temperature: system ? 0 : getTemperature() }, signal); } catch { }
+		}, cancellationTokenSource.token);
+		loop = false;
+		if (!result || cancellationTokenSource.token.isCancellationRequested || abortion) {
+			if (mode === 303) {
+				result = { error: { message: 'The request was canceled because the code was changed.', mode } };
+			} else if (mode === 302) {
+				result = { error: { message: 'The request was canceled because you moved the tab.', mode } };
+			} else if (mode === 301) {
+				result = { error: { message: 'The request was canceled because you deselected the code.', mode } };
+			} else {
+				result = { error: { message: 'Request canceled', mode } };
+			}
+		}
+		return result;
 	};
-	const affectResult = (editor, text, selection, response) => {
+	const affectResult = async (editor, text, selection, response) => {
+		let mode;
+		try { mode = response.error.mode; } catch { }
+		if (mode === 302) {
+			showError({ msg: `${response.error.message}`, context });
+			return false;
+		}
+		let resolver;
+		let promise = new Promise(resolve => resolver = resolve);
 		editor.edit(editBuilder => {
 			let res = parseData(response, text)
 			if (res.code) {
 				editBuilder.replace(selection, res.code);
 				editor.selection = selection;
-				(async () => await formatSelection())();
+				(async () => {
+					await formatSelection()
+					resolver(true)
+				})();
 				showTokenUsage(response);
 			} else {
 				showError({ msg: `${res.error}`, context });
+				resolver(false)
 			}
 		});
+		return await promise;
 	}
 	let processStateToggle = false;
 	function releaseToggle() {
@@ -301,7 +447,28 @@ async function activate(context) {
 			const content = bindingTemplate(getConfigValue('namingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a coding expert assistant`;
 			const response = await requestingToAPI({ title: 'Naming from GPT AI....', content, system })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
+		} catch { }
+		releaseToggle();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.debugging', async function () {
+		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
+		processStateToggle = true;
+		if (!isSelected()) selectTheLineCursorIsOn();
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) { releaseToggle(); return; }
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		if (!text || !text.trim()) { releaseToggle(); return; }
+		try {
+			const activeEditor = vscode.window.activeTextEditor;
+			const languageId = activeEditor.document.languageId;
+			const content = bindingTemplate(getConfigValue('debugprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
+			const system = `You are a coding expert assistant`;
+			const response = await requestingToAPI({ title: 'Debugging from GPT AI....', content, system })
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
@@ -320,10 +487,17 @@ async function activate(context) {
 			const content = bindingTemplate(getConfigValue('refactoringprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
 			const response = await requestingToAPI({ title: 'Requesting a refactoring from GPT AI....', content, system })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
+	if (false) {
+		context.subscriptions.push(vscode.commands.registerCommand('extension.applyChanges', function () {
+			applyChangesToOriginalDocument();
+		}));
+	}
+
 	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.addComment', async function () {
 		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
 		processStateToggle = true;
@@ -339,7 +513,8 @@ async function activate(context) {
 			const content = bindingTemplate(getConfigValue('commmentingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
 			const response = await requestingToAPI({ title: 'Requesting annotations from GPT AI....', content, system })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
@@ -358,7 +533,8 @@ async function activate(context) {
 			const content = bindingTemplate(getConfigValue('generatingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
 			const system = `You are a ${languageId} coding expert assistant`;
 			const response = await requestingToAPI({ title: 'Generating code from GPT AI....', content, system })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
@@ -373,7 +549,8 @@ async function activate(context) {
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: text })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
@@ -396,7 +573,8 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${text}\n${prompt}` })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));
@@ -437,7 +615,8 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${text}\n${prompt}` })
-			affectResult(editor, text, selection, response)
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
 		releaseToggle();
 	}));

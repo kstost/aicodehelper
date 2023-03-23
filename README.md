@@ -293,6 +293,42 @@ AI Code Helper is a tool that automatically performs tasks such as adding commen
       }
       console.log(isValueFound);
       ```
+8. **Debugging**  
+   Debugging is a fun thing from today onwards. Because AICodeHelper will solve it for you.  
+   <img src="https://blog.kakaocdn.net/dn/Cd9Hs/btr5DTnIX1k/FCUrXpXguw4VkwqiUKZzT1/img.gif" width="100%" />  
+   Select the code you want to debug in the code editor and press `Ctrl+Shift+Alt+D`.  
+   If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
+
+   *Select the code that looks like the one shown below and press the shortcut.*
+      ```javascript
+      let a = 6;
+      let b = [5, 3, 7, 6, 8, 9];
+      let c = false;
+      for (let i = 0; i < b.length; i--) {
+         if (a == b[i]) {
+            c = true;
+         }
+      }
+      console.log(c);
+      ```
+
+   *This will be converted like*  
+      ```javascript
+      let a = 6;
+      let b = [5, 3, 7, 6, 8, 9];
+      let c = false;
+      for (let i = 0; i < b.length; i++) {
+         if (a == b[i]) {
+            c = true;
+         }
+      }
+      console.log(c);
+      ```
+9. **Apply after inspection of the result of AI.**  
+   AI can make mistakes. Therefore, the result created by artificial intelligence can be applied after reviewing it as a comparison tool before actually applying it to the code.  
+   <img src="https://blog.kakaocdn.net/dn/bdVbcD/btr5HrqG0fm/KCO2TFuBmyN8xLWUBfoLa1/img.gif" width="100%" />  
+   You can use it after checking Code Diff in Settings.  
+
 ---
 ## License
 

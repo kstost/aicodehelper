@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.64",
+  "version": "0.0.67",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -32,27 +32,27 @@
       "properties": {
         "aicodehelper.debugprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}Debug the code.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the debugged code.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Debug the code.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the debugged code.",
           "description": "This is the prompt template used for debugging\n코드의 오류 수정을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+D)"
         },
         "aicodehelper.namingprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}suggest good variable names for the code and replace them in code to suggested names.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the replaced code.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}suggest good variable names for the code and replace them in code to suggested names.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the replaced code.",
           "description": "This is the prompt template used for naming variables\n변수이름 작명을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+N)"
         },
         "aicodehelper.codereviewprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}review this code.{{newline}}explain the good part and the bad part in {{language}}.{{newline}}don't include the original code in your explanation.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}review this code.{{newline}}explain the good part and the bad part in {{language}}.{{newline}}don't include the original code in your explanation.",
           "description": "This is the prompt template used for a code review\n코드리뷰를 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+C)"
         },
         "aicodehelper.refactoringprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}{{newline}}Refactor the code short without changing algorithm.{{newline}}No explanations, annotations, comments, descriptions",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Refactor the code short without changing algorithm.{{newline}}No explanations, annotations, comments, descriptions",
           "description": "This is the prompt template used for code refactoring\n코드리팩토링을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+R)"
         },
         "aicodehelper.commmentingprompt": {
           "type": "string",
-          "default": "{{selectedcode}}{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code. Show the original source code as it is.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code. Show the original source code as it is.",
           "description": "This is the prompt template used for adding code comments\n코드주석달기기능을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+Z)"
         },
         "aicodehelper.generatingprompt": {
@@ -161,6 +161,46 @@
         "when": "editorHasSelection || editorTextFocus"
       }
     ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "aicodehelper.justAsking",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.justInputAsking",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.recentHistoryOfAsking",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.generateCode",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.addComment",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.refactoring",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.codereview",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.naming",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.debugging",
+          "when": "editorHasSelection"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "aicodehelper.registAPIKey",
@@ -168,19 +208,19 @@
       },
       {
         "command": "aicodehelper.justAsking",
-        "title": "Asking AI"
+        "title": "General Requests"
       },
       {
         "command": "aicodehelper.justInputAsking",
-        "title": "Asking AI with Input"
+        "title": "General Requests with Inputbox"
       },
       {
         "command": "aicodehelper.recentHistoryOfAsking",
-        "title": "List of recent history of asking"
+        "title": "General Requests List"
       },
       {
         "command": "aicodehelper.generateCode",
-        "title": "Generate code"
+        "title": "Code Generating"
       },
       {
         "command": "aicodehelper.addComment",
@@ -192,11 +232,11 @@
       },
       {
         "command": "aicodehelper.codereview",
-        "title": "Code review"
+        "title": "Code Review"
       },
       {
         "command": "aicodehelper.naming",
-        "title": "Naming Variables"
+        "title": "Naming variables, functions, etc"
       },
       {
         "command": "aicodehelper.debugging",

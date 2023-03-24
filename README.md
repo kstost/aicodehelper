@@ -32,6 +32,7 @@ This extension contributes the following settings:
 * `aicodehelper.commmentingprompt`: Prompt template to request adding comments from OpenAI
 * `aicodehelper.generatingprompt`: Prompt template to request generating code from OpenAI
 * `aicodehelper.temperature`: Temperature for general requests
+* `aicodehelper.codeDiff`: Use a function that allows you to check the content suggested by AI against the original code before applying it.
 
 ---
 ## Known Issues
@@ -52,6 +53,11 @@ AI Code Helper is a tool that automatically performs tasks such as adding commen
 5. You can optionally modify the `prompt template`.
 
 ### Usage
+Basically, it can be used as a method of performing specific processing such as debugging or refactoring for the code written on the code editor.  
+Therefore, after selecting the code you want to perform specific processing such as debugging or refactoring, you can select an action for specific processing from the pop-up menu that appears by clicking the right mouse button in the selected area, or you can use a shortcut key to execute the corresponding menu.  
+<img src="https://blog.kakaocdn.net/dn/cwIKZ0/btr5AXLAXsA/4Kd18xZsvKfeWJc9YuFwBK/img.gif" width="100%" />  
+A detailed description of each function is as follows.  
+  
 1. **Adding Comments**  
    Comments play an important role in coding.  
    It checks the meaning of the programming code that has been written and adds comments to the code accordingly.  

@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "engines": {
     "vscode": "^1.60.0"
   },

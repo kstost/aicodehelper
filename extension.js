@@ -12,7 +12,13 @@ async function setCurrentEditorContent(newContent) {
 		editBuilder.replace(fullRange, newContent);
 	});
 }
-
+function removeSelection() {
+	if (!vscode.window.activeTextEditor) return;
+	const editor = vscode.window.activeTextEditor;
+	const startPosition = editor.selection.start;
+	const newSelection = new vscode.Selection(startPosition, startPosition);
+	editor.selection = newSelection;
+}
 async function showDiff(originalCode) {
 	if (!getConfigValue('codeDiff')) return;
 	await new Promise(r => setTimeout(r, 0));
@@ -31,10 +37,11 @@ async function showDiff(originalCode) {
 	}
 	const rightUri = editor.document.uri;
 	const title = '🤖 Change Review 😀';
-	const leftUri = vscode.Uri.parse('aicodehelperdiff:leftContent');
+	const leftUri = vscode.Uri.parse('aicodehelperdiff:leftContent' + `${new Date().getTime()}${Math.random()}`.replace('.', ''));
 	class LeftContentProvider { provideTextDocumentContent(uri) { return leftContent; } }
 	const leftContentProvider = new LeftContentProvider();
 	const leftContentScheme = 'aicodehelperdiff';
+	removeSelection();
 	await vscode.workspace.registerTextDocumentContentProvider(leftContentScheme, leftContentProvider);
 	const diffResult = await vscode.commands.executeCommand('vscode.diff', leftUri, rightUri, title, { preview: !true });
 	//---
@@ -637,6 +644,11 @@ async function activate(context) {
 			vscode.window.showInformationMessage(`AICodeHelper - Configuration Reset`)
 		}
 	}));
+	if (false) {
+		context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(function (event) {
+			if (isDiffCopyAction(event)) { }
+		}));
+	}
 	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.resetPromptHistory', async function () {
 		let res = await vscode.window.showInputBox({
 			title: "Are you sure to reset recent prompt history of AICodeHelper?",

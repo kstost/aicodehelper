@@ -211,7 +211,20 @@ A detailed description of each function is as follows.
          return result
       ```
 6. **General Requests with Inputbox**  
+   As the developer of this extension, this is one of my favorite features.  
    This feature is useful when you want to request additional processing for something that has already been created.  
+   If you select a code and ask "Please comment on the code", this request acts like the `Ctrl+Shift+Alt+Z` function.  
+   If you select a code and ask "Please refactor the code", this request acts like the `Ctrl+Shift+Alt+R` function.  
+   You can also attach more specific conditions to the requests, such as "Please comment on the code by writing in both Korean and Japanese." or "Fix the bug. it runs infinitely. I want it break if the process has done"  
+   Not only that, but if the selected string is not a code but a foreign language, you can request a translation, and if it is the content of an email, you can request that the content of the email be corrected in a polite style.  
+   This function allows you to make various requests for the selected content.  
+   - Youtube shorts videos for various examples
+     - [Convert old grammar code to the latest grammar](https://www.youtube.com/shorts/pditDCD9Wqs)
+     - [Conversion to grammars of other programming languages](https://www.youtube.com/shorts/gpLN2hEdk6Q)
+     - [Calculation of time contained in natural language](https://www.youtube.com/shorts/SvW4zzhz_yU)
+     - [Various conversions between XML, YAML, HTML, etc](https://www.youtube.com/shorts/ZY9xUe4zU-8)
+
+   <br />
    <img src="https://blog.kakaocdn.net/dn/TEKHP/btr3dDug45L/HaOxtv8CXeQBYHa8sBnQy0/img.gif" width="100%" />  
    Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+,(comma)`.  
    The language setting does not apply to this feature.  

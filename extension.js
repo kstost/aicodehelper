@@ -357,6 +357,9 @@ async function activate(context) {
 			try { return await chatGPT.completion(prompt, { temperature: system ? 0 : getTemperature() }, signal); } catch { }
 		}, cancellationTokenSource.token);
 		loop = false;
+		if (false && result) {
+			vscode.window.showInformationMessage(JSON.stringify(result, undefined, 2))
+		}
 		if (!result || cancellationTokenSource.token.isCancellationRequested || abortion) {
 			if (mode === 303) {
 				result = { error: { message: 'The request was canceled because the code was changed.', mode } };
@@ -579,7 +582,9 @@ async function activate(context) {
 		if (!prompt) { releaseToggle(); return; }
 		try {
 			await addRecentPrompts(context, prompt);
-			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${text}\n${prompt}` })
+			const fencedCodeBlock = '```';
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}. Response only the main result. Remove pre-text and post-text.`;
+			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
@@ -619,9 +624,19 @@ async function activate(context) {
 		});
 		//--------
 		if (!prompt) { releaseToggle(); return; }
+		//--------
+		prompt = await vscode.window.showInputBox({
+			placeHolder: "",
+			prompt: "What would you like to do about selected text?",
+			value: prompt
+		});
+		if (!prompt) { releaseToggle(); return; }
+		//--------
 		try {
 			await addRecentPrompts(context, prompt);
-			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${text}\n${prompt}` })
+			const fencedCodeBlock = '```';
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}. Response only the main result. Remove pre-text and post-text.`;
+			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }

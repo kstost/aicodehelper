@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.78",
+  "version": "0.0.79",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -32,12 +32,12 @@
       "properties": {
         "aicodehelper.debugprompt": {
           "type": "string",
-          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Debug the code {{newline}}INSTRUCTIONS:{{newline}}- Response only the debugged code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Debug the code.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the debugged code.",
           "description": "This is the prompt template used for debugging\n코드의 오류 수정을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+D)"
         },
         "aicodehelper.namingprompt": {
           "type": "string",
-          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Suggest good variable names for the code and replace them in code to suggested names{{newline}}INSTRUCTIONS:{{newline}}- Response only the replaced code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}suggest good variable names for the code and replace them in code to suggested names.{{newline}}No any other explanations, annotations, comments, descriptions in your response but only the replaced code.",
           "description": "This is the prompt template used for naming variables\n변수이름 작명을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+N)"
         },
         "aicodehelper.codereviewprompt": {
@@ -47,12 +47,12 @@
         },
         "aicodehelper.refactoringprompt": {
           "type": "string",
-          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Refactor the code short without changing algorithm.{{newline}}INSTRUCTIONS:{{newline}}- Response only the refactored code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Refactor the code short without changing algorithm.{{newline}}No explanations, annotations, comments, descriptions",
           "description": "This is the prompt template used for code refactoring\n코드리팩토링을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+R)"
         },
         "aicodehelper.commmentingprompt": {
           "type": "string",
-          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Add comment line by line in this code.{{newline}}INSTRUCTIONS:{{newline}}- Don't modification or removal the original code.{{newline}}- Write comments in {{language}}.{{newline}}- Response only the original source code with added comment.{{newline}}- Remove pre-text and post-text.{{newline}}- No any other explanations, annotations, comments, descriptions outside of the code.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}Please comment line by line in this code. Please don't touch(modification,removal) the original code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code. Show the original source code as it is.",
           "description": "This is the prompt template used for adding code comments\n코드주석달기기능을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+Z)"
         },
         "aicodehelper.generatingprompt": {

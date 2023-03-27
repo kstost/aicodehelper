@@ -169,7 +169,7 @@ function parseData(response, text) {
 		} else {
 			const cnds = [
 				code.split('```').length === 3,
-				code.split('\n').filter(line => line.startsWith('```')).length === 2
+				// code.split('\n').filter(line => line.startsWith('```')).length === 2
 			]
 			const conditions = cnds.filter(Boolean).length === cnds.length
 			if (conditions) {
@@ -578,7 +578,7 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const fencedCodeBlock = '```';
-			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}. Response only the main result. Remove pre-text and post-text.`;
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
@@ -630,7 +630,7 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const fencedCodeBlock = '```';
-			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}. Response only the main result. Remove pre-text and post-text.`;
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }

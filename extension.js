@@ -3,6 +3,16 @@ const keytar = require('keytar');
 const ChatGPT = require('./ChatGPT');
 const { removeAllPassword, resetAll, resetPromptsHistory } = require('./storageManager');
 const MASKING = '****';
+function makeReqForm(configName, text) {
+	const activeEditor = vscode.window.activeTextEditor;
+	const languageId = activeEditor.document.languageId;
+	let content = bindingTemplate(getConfigValue(configName), { selectedcode: text, languageId, language: getConfigValue('language') });
+	// content = content.split('```').join('');
+	// content = content.split('\n').join(' ');
+	content = content.trim();
+	const system = `You are a ${languageId} coding expert assistant`;
+	return { content, system };
+}
 async function setCurrentEditorContent(newContent) {
 	const editor = vscode.window.activeTextEditor;
 	const firstLine = editor.document.lineAt(0);
@@ -358,7 +368,8 @@ async function activate(context) {
 		}, cancellationTokenSource.token);
 		loop = false;
 		if (false && result) {
-			vscode.window.showInformationMessage(JSON.stringify(result, undefined, 2))
+			vscode.window.showInformationMessage(result.content)
+			// vscode.window.showInformationMessage(JSON.stringify(result, undefined, 2))
 		}
 		if (!result || cancellationTokenSource.token.isCancellationRequested || abortion) {
 			if (mode === 303) {
@@ -452,11 +463,7 @@ async function activate(context) {
 		const text = editor.document.getText(selection);
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
-			const activeEditor = vscode.window.activeTextEditor;
-			const languageId = activeEditor.document.languageId;
-			const content = bindingTemplate(getConfigValue('namingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
-			const system = `You are a coding expert assistant`;
-			const response = await requestingToAPI({ title: 'Naming from GPT AI....', content, system })
+			const response = await requestingToAPI({ title: 'Naming from GPT AI..', ...makeReqForm('namingprompt', text) })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
@@ -472,11 +479,7 @@ async function activate(context) {
 		const text = editor.document.getText(selection);
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
-			const activeEditor = vscode.window.activeTextEditor;
-			const languageId = activeEditor.document.languageId;
-			const content = bindingTemplate(getConfigValue('debugprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
-			const system = `You are a coding expert assistant`;
-			const response = await requestingToAPI({ title: 'Debugging from GPT AI....', content, system })
+			const response = await requestingToAPI({ title: 'Debugging from GPT AI..', ...makeReqForm('debugprompt', text) })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
@@ -492,11 +495,7 @@ async function activate(context) {
 		const text = editor.document.getText(selection);
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
-			const activeEditor = vscode.window.activeTextEditor;
-			const languageId = activeEditor.document.languageId;
-			const content = bindingTemplate(getConfigValue('refactoringprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
-			const system = `You are a ${languageId} coding expert assistant`;
-			const response = await requestingToAPI({ title: 'Requesting a refactoring from GPT AI....', content, system })
+			const response = await requestingToAPI({ title: 'Requesting a refactoring from GPT AI..', ...makeReqForm('refactoringprompt', text) })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
@@ -518,11 +517,7 @@ async function activate(context) {
 		const text = editor.document.getText(selection);
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
-			const activeEditor = vscode.window.activeTextEditor;
-			const languageId = activeEditor.document.languageId;
-			const content = bindingTemplate(getConfigValue('commmentingprompt'), { selectedcode: text, languageId, language: getConfigValue('language') });
-			const system = `You are a ${languageId} coding expert assistant`;
-			const response = await requestingToAPI({ title: 'Requesting annotations from GPT AI....', content, system })
+			const response = await requestingToAPI({ title: 'Requesting annotations from GPT AI..', ...makeReqForm('commmentingprompt', text) })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }

@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.80",
+  "version": "0.0.81",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -57,7 +57,7 @@
         },
         "aicodehelper.generatingprompt": {
           "type": "string",
-          "default": "{description}={{selectedcode}}{{newline}}{{newline}}Make the code as {description} in {{languageId}} syntax. Please comment line by line in the code. write comments in {{language}}. No any other explanations, annotations, comments, descriptions except inside code.",
+          "default": "DESCRIPTION:{{newline}}{{selectedcode}}.{{newline}}{{newline}}REQUEST:{{newline}}Make a code as DESCRIPTION in {{languageId}} syntax.{{newline}}{{newline}}INSTRUCTIONS:{{newline}}- Add comment line by line in the code.{{newline}}- Write comments in {{language}}.{{newline}}- Response only the made code with added comment.{{newline}}- Do not response any other explanations, annotations, comments, descriptions except inside the code.{{newline}}- Remove pre-text and post-text.",
           "description": "This is a prompt template for generating code based on a description of what you want to create in code\n코드로 만들고싶은것에 대한 묘사를 기반으로 하여 코드를 생성해내는 기능을 위한 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+G)"
         },
         "aicodehelper.APIKey": {

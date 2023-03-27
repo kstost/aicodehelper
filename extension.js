@@ -578,7 +578,7 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const fencedCodeBlock = '```';
-			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
@@ -630,7 +630,7 @@ async function activate(context) {
 		try {
 			await addRecentPrompts(context, prompt);
 			const fencedCodeBlock = '```';
-			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }

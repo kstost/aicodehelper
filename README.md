@@ -192,6 +192,7 @@ A detailed description of each function is as follows.
 
 5. **Code Generating**  
    This feature uses artificial intelligence to generate code based on the description of the desired functionality provided in the explanation.  
+   This function provides help by referring to the language mode set in the code editor.  
    <img src="https://blog.kakaocdn.net/dn/bNM7Lr/btr2TC3VdgJ/3WlDMegYVucPwOANBQVRtk/img.gif" width="100%" />  
    Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+G`.  
    If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
@@ -211,22 +212,16 @@ A detailed description of each function is as follows.
          return result
       ```
 6. **General Requests with Inputbox**  
-   As the developer of this extension, this is one of my favorite features.  
    This feature is useful when you want to request additional processing for something that has already been created.  
-   If you select a code and ask "Please comment on the code", this request acts like the `Ctrl+Shift+Alt+Z` function.  
-   If you select a code and ask "Please refactor the code", this request acts like the `Ctrl+Shift+Alt+R` function.  
-   You can also attach more specific conditions to the requests, such as "Please comment on the code by writing in both Korean and Japanese." or "Fix the bug. it runs infinitely. I want it break if the process has done"  
-   Not only that, but if the selected string is not a code but a foreign language, you can request a translation, and if it is the content of an email, you can request that the content of the email be corrected in a polite style.  
+   If the selected string is an article of foreign language, you can request a translation, and if it is the content of an email, you can request that the content of the email be corrected in a polite style.  
    This function allows you to make various requests for the selected content.  
    - Youtube shorts videos for various examples
-     - [Convert old grammar code to the latest grammar](https://www.youtube.com/shorts/pditDCD9Wqs)
-     - [Conversion to grammars of other programming languages](https://www.youtube.com/shorts/gpLN2hEdk6Q)
      - [Calculation of time contained in natural language](https://www.youtube.com/shorts/SvW4zzhz_yU)
      - [Various conversions between XML, YAML, HTML, etc](https://www.youtube.com/shorts/ZY9xUe4zU-8)
 
    <br />
    <img src="https://blog.kakaocdn.net/dn/TEKHP/btr3dDug45L/HaOxtv8CXeQBYHa8sBnQy0/img.gif" width="100%" />  
-   Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+,(comma)`.  
+   Select the text you want to request in the code editor and press `Ctrl+Shift+Alt+,(comma)`.  
    The language setting does not apply to this feature.  
    Therefore, if you want to specify the language for the AI's response, you need to mention the language in the text that will be selected.  
    If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
@@ -281,7 +276,21 @@ A detailed description of each function is as follows.
          </tr>
       </table>
       ```
-7. **Naming variables, functions, etc**  
+7. **Request to fix the code**  
+   This feature is useful when you want to request additional processing for the code that has already been created.  
+   How to use this function is the same as how to use the `General Requests with Inputbox` function.  
+   The difference between the functions is that the `General Requests with Inputbox` function is used for things not related to programming code, while this function is good for handling code.  
+   If you select a code and ask "Please comment on the code", this request acts like the `Ctrl+Shift+Alt+Z` function.  
+   If you select a code and ask "Please refactor the code", this request acts like the `Ctrl+Shift+Alt+R` function.  
+   You can also attach more specific conditions to the requests, such as "Please comment on the code by writing in both Korean and Japanese." or "Fix the bug. it runs infinitely. I want it break if the process has done"  
+   This function allows you to make various requests for the selected code.  
+   <br />
+   Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+K`.  
+   The language setting does not apply to this feature.  
+   Therefore, if you want to specify the language for the AI's response, you need to mention the language in the code that will be selected or in the prompt.  
+   If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
+   The prompt entered in this way can be reused later using the shortcut key `Ctrl+Shift+Alt+L`, and this record can be reset using the shortcut key `Ctrl+Shift+Alt+(back tick)`.  
+8. **Naming variables, functions, etc**  
    It is a function that solves the problem of naming, which is the most difficult part of coding.  
    <img src="https://blog.kakaocdn.net/dn/djHq9D/btr34BChNMB/nrs95N0A0PjkvKBCzB83PK/img.gif" width="100%" />  
    Select the code you want to rename in the code editor and press `Ctrl+Shift+Alt+N`.  
@@ -312,7 +321,7 @@ A detailed description of each function is as follows.
       }
       console.log(isValueFound);
       ```
-8. **Debugging**  
+9. **Debugging**  
    Debugging is a fun thing from today onwards. Because AICodeHelper will solve it for you.  
    <img src="https://blog.kakaocdn.net/dn/Cd9Hs/btr5DTnIX1k/FCUrXpXguw4VkwqiUKZzT1/img.gif" width="100%" />  
    Select the code you want to debug in the code editor and press `Ctrl+Shift+Alt+D`.  
@@ -343,7 +352,7 @@ A detailed description of each function is as follows.
       }
       console.log(c);
       ```
-9. **Apply after inspection of the result of AI.**  
+10. **Apply after inspection of the result of AI.**  
    AI can make mistakes. Therefore, the result created by artificial intelligence can be applied after reviewing it as a comparison tool before actually applying it to the code.  
    <img src="https://blog.kakaocdn.net/dn/bdVbcD/btr5HrqG0fm/KCO2TFuBmyN8xLWUBfoLa1/img.gif" width="100%" />  
    You can use it after checking Code Diff in Settings.  

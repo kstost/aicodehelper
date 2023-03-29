@@ -280,9 +280,9 @@ A detailed description of each function is as follows.
    This feature is useful when you want to request additional processing for the code that has already been created.  
    How to use this function is the same as how to use the `General Requests with Inputbox` function.  
    The difference between the functions is that the `General Requests with Inputbox` function is used for things not related to programming code, while this function is good for handling code.  
-   If you select a code and ask "Please comment on the code", this request acts like the `Ctrl+Shift+Alt+Z` function.  
-   If you select a code and ask "Please refactor the code", this request acts like the `Ctrl+Shift+Alt+R` function.  
-   You can also attach more specific conditions to the requests, such as "Please comment on the code by writing in both Korean and Japanese." or "Fix the bug. it runs infinitely. I want it break if the process has done"  
+   If you select a code and ask "Add comment line by line on the code.", this request acts like the `Ctrl+Shift+Alt+Z` function.  
+   If you select a code and ask "Refactor the code.", this request acts like the `Ctrl+Shift+Alt+R` function.  
+   You can also attach more specific conditions to the requests, such as "Fix the bug. it runs infinitely. I want it break if the process has done"  
    This function allows you to make various requests for the selected code.  
    <br />
    Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+K`.  

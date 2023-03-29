@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.87",
+  "version": "0.0.95",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -119,9 +119,21 @@
         "when": "editorHasSelection || editorTextFocus"
       },
       {
+        "command": "aicodehelper.recentHistoryOfCodingAsking",
+        "key": "ctrl+alt+shift+l",
+        "mac": "ctrl+alt+shift+l",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
         "command": "aicodehelper.justInputAsking",
         "key": "ctrl+alt+shift+,",
         "mac": "ctrl+alt+shift+,",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "aicodehelper.justInputCodingAsking",
+        "key": "ctrl+alt+shift+k",
+        "mac": "ctrl+alt+shift+k",
         "when": "editorHasSelection || editorTextFocus"
       },
       {
@@ -172,7 +184,15 @@
           "when": "editorHasSelection"
         },
         {
+          "command": "aicodehelper.justInputCodingAsking",
+          "when": "editorHasSelection"
+        },
+        {
           "command": "aicodehelper.recentHistoryOfAsking",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aicodehelper.recentHistoryOfCodingAsking",
           "when": "editorHasSelection"
         },
         {
@@ -215,8 +235,16 @@
         "title": "General Requests with Inputbox"
       },
       {
+        "command": "aicodehelper.justInputCodingAsking",
+        "title": "Request to fix the code"
+      },
+      {
         "command": "aicodehelper.recentHistoryOfAsking",
         "title": "General Requests List"
+      },
+      {
+        "command": "aicodehelper.recentHistoryOfCodingAsking",
+        "title": "Request history to fix the code"
       },
       {
         "command": "aicodehelper.generateCode",

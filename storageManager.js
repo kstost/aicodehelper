@@ -32,6 +32,7 @@ async function resetAll(context) {
 
 async function resetPromptsHistory(context) {
     await context.secrets.store('recentprompt', JSON.stringify([]));
+    await context.secrets.store('recentcodeprompt', JSON.stringify([]));
 }
 
 module.exports = {

@@ -173,14 +173,7 @@ function parseData(response, text) {
 			]
 			const conditions = cnds.filter(Boolean).length === cnds.length
 			if (conditions) {
-				const splc = code.split('\n');
-				let accus = [];
-				let add = false
-				for (let line of splc) {
-					if (line.startsWith('```')) { add = !add; continue; }
-					if (add) accus.push(line);
-				}
-				code = accus.join('\n').trim();
+				try { code = code.split('```')[1].trim(); } catch { }
 			}
 		}
 		let endcode = text.endsWith('\n') ? '\n' : ''
@@ -253,7 +246,7 @@ async function getKeyFromVSCodeSecure(context) {
 	try { data = await context.secrets.get('gptkey'); } catch (e) { }
 	return data;
 }
-async function addRecentPrompts(context, prompt, limit = 100) {
+async function addRecentPrompts(context, prompt, storeId, limit = 100) {
 	const removeStringFromArray = (arr, str) => {
 		const index = arr.indexOf(str);
 		if (index !== -1) arr.splice(index, 1);
@@ -262,15 +255,15 @@ async function addRecentPrompts(context, prompt, limit = 100) {
 	if (prompt) prompt = prompt.trim();
 	if (!prompt) return;
 	try {
-		let data = await getRecentPrompts(context)
+		let data = await getRecentPrompts(context, storeId)
 		data = [prompt, ...removeStringFromArray(data, prompt).splice(0, limit - 1)];
-		context.secrets.store('recentprompt', JSON.stringify(data));
+		context.secrets.store(storeId, JSON.stringify(data));
 	} catch (e) { }
 }
-async function getRecentPrompts(context) {
+async function getRecentPrompts(context, storeId) {
 	let data = [];
 	try {
-		let _data = await context.secrets.get('recentprompt');
+		let _data = await context.secrets.get(storeId);
 		_data = JSON.parse(_data);
 		if (_data.constructor === Array) data = _data;
 	} catch (e) { }
@@ -576,10 +569,37 @@ async function activate(context) {
 		let prompt = await res;
 		if (!prompt) { releaseToggle(); return; }
 		try {
-			await addRecentPrompts(context, prompt);
+			await addRecentPrompts(context, prompt, 'recentprompt');
 			const fencedCodeBlock = '```';
 			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
+		} catch { }
+		releaseToggle();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.justInputCodingAsking', async function () {
+		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
+		processStateToggle = true;
+		if (!isSelected()) selectTheLineCursorIsOn();
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) { releaseToggle(); return; }
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		if (!text || !text.trim()) { releaseToggle(); return; }
+		let res = vscode.window.showInputBox({
+			placeHolder: "",
+			prompt: "What would you like to do about selected code?",
+			value: ''
+		});
+		let prompt = await res;
+		if (!prompt) { releaseToggle(); return; }
+		try {
+			await addRecentPrompts(context, prompt, 'recentcodeprompt');
+			const system = `You are a coding expert assistant. Modify the code inside the fenced code block as requested by the user and response the modified code.`;
+			const fencedCodeBlock = '```';
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
+			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}`, system })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }
@@ -605,7 +625,7 @@ async function activate(context) {
 			quickPick.show();
 			releaseToggle(); return;
 		}
-		const items = await getRecentPrompts(context);
+		const items = await getRecentPrompts(context, 'recentprompt');
 		if (!items.length) {
 			releaseToggle();
 			vscode.window.showInformationMessage(`No Recent Prompt History`)
@@ -628,10 +648,63 @@ async function activate(context) {
 		if (!prompt) { releaseToggle(); return; }
 		//--------
 		try {
-			await addRecentPrompts(context, prompt);
+			await addRecentPrompts(context, prompt, 'recentprompt');
 			const fencedCodeBlock = '```';
 			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
 			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}` })
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
+		} catch { }
+		releaseToggle();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.recentHistoryOfCodingAsking', async function () {
+		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
+		processStateToggle = true;
+		if (!isSelected()) selectTheLineCursorIsOn();
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) { releaseToggle(); return; }
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		if (!text || !text.trim()) { releaseToggle(); return; }
+		//--------
+		if (false) {
+			const items = ['Item 1', 'Item 2', 'Item 3'];
+			const quickPick = vscode.window.createQuickPick();
+			quickPick.items = items;
+			quickPick.canPickMany = false;
+			quickPick.title = 'My QuickPick';
+			quickPick.width = 2200; // 너비 설정
+			quickPick.show();
+			releaseToggle(); return;
+		}
+		const items = await getRecentPrompts(context, 'recentcodeprompt');
+		if (!items.length) {
+			releaseToggle();
+			vscode.window.showInformationMessage(`No Recent Prompt History`)
+			return;
+		}
+		let prompt = await vscode.window.showQuickPick(items, {
+			title: 'Recent Prompts',
+			placeHolder: 'Select a prompt',
+			canPickMany: false,
+			ignoreFocusOut: false
+		});
+		//--------
+		if (!prompt) { releaseToggle(); return; }
+		//--------
+		prompt = await vscode.window.showInputBox({
+			placeHolder: "",
+			prompt: "What would you like to do about selected code?",
+			value: prompt
+		});
+		if (!prompt) { releaseToggle(); return; }
+		//--------
+		try {
+			await addRecentPrompts(context, prompt, 'recentcodeprompt');
+			const system = `You are a coding expert assistant. Modify the code inside the fenced code block as requested by the user and response the modified code.`;
+			const fencedCodeBlock = '```';
+			const requestPrompt = `INPUT FOR REQUEST: fenced Code Block\nREQUEST: ${prompt}.`;//\nINSTRUCTIONS: Response only the main result without explanations, annotations, comments, descriptions.`;
+			const response = await requestingToAPI({ title: 'Requesting to GPT AI....', content: `${fencedCodeBlock}\n${text}${fencedCodeBlock}\n\n${requestPrompt}`, system })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }

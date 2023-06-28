@@ -257,7 +257,7 @@ async function addRecentPrompts(context, prompt, storeId, limit = 100) {
 	try {
 		let data = await getRecentPrompts(context, storeId)
 		data = [prompt, ...removeStringFromArray(data, prompt).splice(0, limit - 1)];
-		context.secrets.store(storeId, JSON.stringify(data));
+		await context.secrets.store(storeId, JSON.stringify(data));
 	} catch (e) { }
 }
 async function getRecentPrompts(context, storeId) {

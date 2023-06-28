@@ -86,7 +86,7 @@ A detailed description of each function is as follows.
 
 2. **Refactoring**  
    This feature uses artificial intelligence to refactor code.  
-   <img src="https://blog.kakaocdn.net/dn/bNM7Lr/btr2TC3VdgJ/3WlDMegYVucPwOANBQVRtk/img.gif" width="100%" />  
+   <img src="https://blog.kakaocdn.net/dn/cRcvo7/btr2X9AlfzK/7m7GHckntUUepfg6I3rxN1/img.gif" width="100%" />  
    Select the code you want to refactor in the code editor and press `Ctrl+Shift+Alt+R`.  
    If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
 
@@ -119,7 +119,7 @@ A detailed description of each function is as follows.
 
 3. **Code Review**  
    This feature uses artificial intelligence to identify the strengths and weaknesses of the code and provide code reviews.  
-   <img src="https://blog.kakaocdn.net/dn/bNM7Lr/btr2TC3VdgJ/3WlDMegYVucPwOANBQVRtk/img.gif" width="100%" />  
+   <img src="https://blog.kakaocdn.net/dn/kND4D/btr2X91qRN4/IkQcZfm0IUlEImGk1L0GeK/img.gif" width="100%" />  
    Select the code you want to review in the code editor and press `Ctrl+Shift+Alt+C`.  
    If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
 
@@ -157,7 +157,7 @@ A detailed description of each function is as follows.
 
 4. **General Requests**  
    This feature uses artificial intelligence to handle requests for various queries beyond programming code.  
-   <img src="https://blog.kakaocdn.net/dn/bNM7Lr/btr2TC3VdgJ/3WlDMegYVucPwOANBQVRtk/img.gif" width="100%" />  
+   <img src="https://blog.kakaocdn.net/dn/pmsQw/btr2ZSky3Xi/Kdq6qmIqKRo5QoHt6p8ipk/img.gif" width="100%" />  
    Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+M`.  
    The language setting does not apply to this feature.  
    Therefore, if you want to specify the language for the AI's response, you need to mention the language in the text that will be selected.  
@@ -193,7 +193,7 @@ A detailed description of each function is as follows.
 5. **Code Generating**  
    This feature uses artificial intelligence to generate code based on the description of the desired functionality provided in the explanation.  
    This function provides help by referring to the language mode set in the code editor.  
-   <img src="https://blog.kakaocdn.net/dn/bNM7Lr/btr2TC3VdgJ/3WlDMegYVucPwOANBQVRtk/img.gif" width="100%" />  
+   <img src="https://blog.kakaocdn.net/dn/cUwhDT/btr2TB40A4J/XYYBMQtNY37qpXCz72ZFx0/img.gif" width="100%" />  
    Select the code you want to request in the code editor and press `Ctrl+Shift+Alt+G`.  
    If you press the shortcut key without making a selection, it automatically selects the line where the cursor is located.  
 

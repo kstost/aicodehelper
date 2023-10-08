@@ -1,5 +1,4 @@
 const vscode = require('vscode');
-const keytar = require('keytar');
 const ChatGPT = require('./ChatGPT');
 const { removeAllPassword, resetAll, resetPromptsHistory } = require('./storageManager');
 const MASKING = '****';
@@ -230,7 +229,6 @@ function bindingTemplate(template, data) {
 async function secureStore(context, inputkey) {
 	let setting = getConfigValue('gptkey');
 	let keytars;
-	try { keytars = await keytar.getPassword('aicodehelper', setting); } catch { }
 	await setKeyFromVSCodeSecure(context, setting)
 	await setKeyFromVSCodeSecure(context, keytars)
 	await setKeyFromVSCodeSecure(context, inputkey)

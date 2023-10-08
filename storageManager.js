@@ -1,11 +1,5 @@
 const vscode = require('vscode');
-const keytar = require('keytar');
 async function removeAllPassword() {
-    const serviceName = 'aicodehelper';
-    try {
-        const accounts = await keytar.findCredentials(serviceName);
-        for (const account of accounts) await keytar.deletePassword(serviceName, account.account);
-    } catch { }
 }
 function removeAllConfigs() {
     const config = vscode.workspace.getConfiguration('aicodehelper');

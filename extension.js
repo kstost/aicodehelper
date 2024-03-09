@@ -346,7 +346,8 @@ async function activate(context) {
 				cancellationTokenSource.cancel()
 				controller.abort();
 			});
-			try { return await chatGPT.completion(prompt, { temperature: system ? 0 : getTemperature() }, signal); } catch { }
+			let model = getConfigValue('model');
+			try { return await chatGPT.completion(model, prompt, { temperature: system ? 0 : getTemperature() }, signal); } catch { }
 		}, cancellationTokenSource.token);
 		loop = false;
 		if (false && result) {

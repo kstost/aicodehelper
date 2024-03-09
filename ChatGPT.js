@@ -240,7 +240,7 @@ class ChatGPT {
         };
     }
     sumTokenSize(obj) { return obj.reduce((sum, { token }) => sum + (token || 0), 0); }
-    async completion(prompt, payload = {}, signal) {
+    async completion(model, prompt, payload = {}, signal) {
         let worktime = new Date();
         prompt = this.measureAndSetPrompt(prompt);
         prompt = this.cutFrontPrompt(prompt);
@@ -261,7 +261,6 @@ class ChatGPT {
             const ENDPOINT = 'https://api.openai.com/v1/chat/completions';
             const sumsize = this.sumTokenSize(prompt);
             let messages = prompt.map(log => ({ role: log.role, content: log.content }));
-            let model = getConfigValue('model');
             if (!model) model = "gpt-3.5-turbo";
             const data = {
                 model,

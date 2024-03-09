@@ -24,6 +24,7 @@ This extension is powered by Chat Completion(model: gpt-3.5-turbo) API of OpenAI
 ## Extension Settings
 
 This extension contributes the following settings:
+* `aicodehelper.model`: The type of OpenAI artificial intelligence model to use. For the model name, please refer to https://platform.openai.com/docs/models/overview.
 * `aicodehelper.language`: What language would you like AI to use? (ex: english, korean, chinese)
 * `aicodehelper.namingprompt`: Prompt template to request naming variables from OpenAI
 * `aicodehelper.debugprompt`: Prompt template to request debugging from OpenAI

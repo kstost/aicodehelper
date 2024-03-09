@@ -57,7 +57,7 @@
         },
         "aicodehelper.sccprompt": {
           "type": "string",
-          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Complete the missing part of the code.{{newline}}INSTRUCTIONS:{{newline}}- Response the user's code and generated code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Complete the missing part of the code.{{newline}}INSTRUCTIONS:{{newline}}- Response the whole of user's code and generated code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
           "description": "This is the prompt template used for code completion\n코드완성을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+I)"
         },
         "aicodehelper.commmentingprompt": {

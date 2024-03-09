@@ -261,8 +261,10 @@ class ChatGPT {
             const ENDPOINT = 'https://api.openai.com/v1/chat/completions';
             const sumsize = this.sumTokenSize(prompt);
             let messages = prompt.map(log => ({ role: log.role, content: log.content }));
+            let model = getConfigValue('model');
+            if (!model) model = "gpt-3.5-turbo";
             const data = {
-                model: "gpt-3.5-turbo",
+                model,
                 messages,
                 temperature: 0.7,
                 stream: !!stream,

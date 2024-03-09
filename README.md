@@ -29,6 +29,7 @@ This extension contributes the following settings:
 * `aicodehelper.debugprompt`: Prompt template to request debugging from OpenAI
 * `aicodehelper.codereviewprompt`: Prompt template to request a code review from OpenAI
 * `aicodehelper.refactoringprompt`: Prompt template to request a refactoring from OpenAI
+* `aicodehelper.sccprompt`: Prompt template to request a code completion from OpenAI
 * `aicodehelper.commmentingprompt`: Prompt template to request adding comments from OpenAI
 * `aicodehelper.generatingprompt`: Prompt template to request generating code from OpenAI
 * `aicodehelper.temperature`: Temperature for general requests

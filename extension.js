@@ -160,20 +160,11 @@ function showError({ context, msg }) {
 function parseData(response, text) {
 	try {
 		let code = (response.content) ? response.content.trim() : ''
-		let dcode = code.split('\n');
-		if (dcode[0].startsWith('```') && dcode[dcode.length - 1] === '```') {
-			dcode[0] = ''
-			dcode[dcode.length - 1] = '';
-			code = dcode.join('\n').trim();
-		} else {
-			const cnds = [
-				code.split('```').length === 3,
-				// code.split('\n').filter(line => line.startsWith('```')).length === 2
-			]
-			const conditions = cnds.filter(Boolean).length === cnds.length
-			if (conditions) {
-				try { code = code.split('```')[1].trim(); } catch { }
-			}
+		let ccode = code.split('```');
+		if (ccode.length === 3) {
+			let codelist = ccode[1].split('\n')
+			codelist.shift();
+			code = codelist.join('\n')
 		}
 		let endcode = text.endsWith('\n') ? '\n' : ''
 		let res = {};
@@ -487,6 +478,22 @@ async function activate(context) {
 		if (!text || !text.trim()) { releaseToggle(); return; }
 		try {
 			const response = await requestingToAPI({ title: 'Requesting a refactoring from GPT AI..', ...makeReqForm('refactoringprompt', text) })
+			const originalCode = editor.document.getText();
+			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
+		} catch { }
+		releaseToggle();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('aicodehelper.scc', async function () {
+		if (processStateToggle) { showError({ msg: 'Please retry after previous processing is complete', context }); return; }
+		processStateToggle = true;
+		if (!isSelected()) selectTheLineCursorIsOn();
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) { releaseToggle(); return; }
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		if (!text || !text.trim()) { releaseToggle(); return; }
+		try {
+			const response = await requestingToAPI({ title: 'Requesting a code completion from GPT AI..', ...makeReqForm('sccprompt', text) })
 			const originalCode = editor.document.getText();
 			if (await affectResult(editor, text, selection, response)) { await showDiff(originalCode) }
 		} catch { }

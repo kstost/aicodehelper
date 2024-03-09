@@ -2,7 +2,7 @@
   "name": "aicodehelper",
   "displayName": "AICodeHelper",
   "description": "AI-based coding assistant",
-  "version": "0.0.101",
+  "version": "0.0.102",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -30,6 +30,11 @@
       "type": "object",
       "title": "AICodeHelper Configuration",
       "properties": {
+        "aicodehelper.model": {
+          "type": "string",
+          "default": "gpt-3.5-turbo",
+          "description": "The type of OpenAI artificial intelligence model to use. For the model name, please refer to https://platform.openai.com/docs/models/overview\n사용할 OpenAI의 인공지능 모델의 종류입니다. 모델의 이름은 https://platform.openai.com/docs/models/overview 를 참고해주세요."
+        },
         "aicodehelper.debugprompt": {
           "type": "string",
           "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Debug the code {{newline}}INSTRUCTIONS:{{newline}}- Response only the debugged code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
@@ -49,6 +54,11 @@
           "type": "string",
           "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Refactor the code short without changing algorithm.{{newline}}INSTRUCTIONS:{{newline}}- Response only the refactored code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
           "description": "This is the prompt template used for code refactoring\n코드리팩토링을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+R)"
+        },
+        "aicodehelper.sccprompt": {
+          "type": "string",
+          "default": "```{{newline}}{{selectedcode}}{{newline}}```{{newline}}{{newline}}INPUT FOR REQUEST: fenced Code Block{{newline}}REQUEST: Complete the missing part of the code.{{newline}}INSTRUCTIONS:{{newline}}- Response the user's code and generated code without any other explanations, annotations, comments, descriptions.{{newline}}- Remove pre-text and post-text.",
+          "description": "This is the prompt template used for code completion\n코드완성을 위해 사용되는 프롬프트 템플릿입니다\nShortcut key: (Ctrl+Alt+Shift+I)"
         },
         "aicodehelper.commmentingprompt": {
           "type": "string",
@@ -155,6 +165,12 @@
         "when": "editorHasSelection || editorTextFocus"
       },
       {
+        "command": "aicodehelper.scc",
+        "key": "ctrl+alt+shift+i",
+        "mac": "ctrl+alt+shift+i",
+        "when": "editorHasSelection || editorTextFocus"
+      },
+      {
         "command": "aicodehelper.codereview",
         "key": "ctrl+alt+shift+c",
         "mac": "ctrl+alt+shift+c",
@@ -208,6 +224,10 @@
           "when": "editorHasSelection"
         },
         {
+          "command": "aicodehelper.scc",
+          "when": "editorHasSelection"
+        },
+        {
           "command": "aicodehelper.codereview",
           "when": "editorHasSelection"
         },
@@ -257,6 +277,10 @@
       {
         "command": "aicodehelper.refactoring",
         "title": "Refactoring code"
+      },
+      {
+        "command": "aicodehelper.scc",
+        "title": "Code completion"
       },
       {
         "command": "aicodehelper.codereview",

@@ -9,6 +9,7 @@ function removeAllConfigs() {
         'namingprompt',
         'codereviewprompt',
         'refactoringprompt',
+        'sccprompt',
         'commmentingprompt',
         'generatingprompt',
         'gptkey',
